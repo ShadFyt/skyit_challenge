@@ -31,8 +31,20 @@ class Vehicle(models.Model):
 
 
 class MileageAndDate(models.Model):
-    mil: int = models.ImageField(blank=False)
-    date_created = models.DateField(default=date.today, unique=True)
+    """Blueprint for `MileageAndDate` table
+
+    ATTR:
+        {
+            mil: int = 12340,
+            date_created: date = "2022-03-16",
+            vehicle: Vehicle
+        }
+
+
+    """
+
+    mil: int = models.IntegerField(blank=False)
+    date_created: date = models.DateField(default=date.today, unique=True)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
 
     class Meta:

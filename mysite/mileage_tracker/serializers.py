@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from mileage_tracker.models import Vehicle
+from mileage_tracker.models import Vehicle, MileageAndDate
 
 
 class VehicleSerializer(serializers.ModelSerializer):
@@ -7,11 +7,8 @@ class VehicleSerializer(serializers.ModelSerializer):
         model = Vehicle
         fields = ["unit", "mileage", "manufacturer", "status"]
 
-    def update_mileage(self, instance, validated_data):
-        """
-        Update and return  an existing `Vehicle.mileage` instance, given the validated mileage.
-        """
 
-        instance.mileage = validated_data.get("mileage", instance.mileage)
-        instance.save()
-        return instance
+class MileageAndDateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MileageAndDate
+        fields = ["id", "mil", "date_created"]
