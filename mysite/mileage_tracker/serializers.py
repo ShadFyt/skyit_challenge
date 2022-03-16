@@ -5,7 +5,7 @@ from mileage_tracker.models import Vehicle
 class VehicleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vehicle
-        fields = ["id", "mileage", "manufacturer", "status"]
+        fields = ["unit", "mileage", "manufacturer", "status"]
 
     def update_mileage(self, instance, validated_data):
         """

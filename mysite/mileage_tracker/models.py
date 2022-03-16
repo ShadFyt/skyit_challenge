@@ -12,6 +12,7 @@ class Vehicle(models.Model):
 
     status_options = [("active", "Active"), ("inoperative", "Inoperative")]
 
+    unit: str = models.CharField(primary_key=True, max_length=8)
     created = models.DateTimeField(auto_now_add=True)
     mileage: int = models.IntegerField(blank=False)
     manufacturer: str = models.CharField(max_length=100, blank=False)
