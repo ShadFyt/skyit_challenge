@@ -44,11 +44,16 @@ class MileageAndDate(models.Model):
     """
 
     mil: int = models.IntegerField(blank=False)
-    date_created: date = models.DateField(default=date.today, unique=True)
+    date_created: date = models.DateField(default=date.today)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+    diff = models.IntegerField(null=True)
 
     class Meta:
-        ordering = ["date_created"]
+        ordering = ["-date_created"]
 
     def __str__(self):
-        return f"Date: {self.date_created}, Mileage: {self.mil}"
+        return f"Date: {self.date_created}, Mileage: {self.mil}, Unit #: {self.vehicle.unit}, Difference: {self.diff}"
+
+    @property
+    def get_difference(self):
+        return self.mil - self.vehicle__mileage
