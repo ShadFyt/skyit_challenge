@@ -31,11 +31,11 @@
 You can also update the mileage on this route and in doing so will create a instance of `MileageAndDate`
 ![vehicle detail](./images/vehicle_detail.png)
 
-[MileageAndDate](http://localhost:8000/mileage/)
+`http://localhost:8000/mileage/`
 **This route shows the `MileageAndDate` Table**
 
 ![MileageAndDate](./images/mileage_date_list.png)
 
-**To access `MileageAndDate` detail page go to [MileageAndDate details](http://localhost:8000/mileage/diff?date_created=2022-03-18&vehicle__unit=DG42F41A)** you can change the `date_created` & `vehicle__unit` params to a different `MileageAndDate` Instance
+**To access `MileageAndDate` detail page go to `http://localhost:8000/mileage/diff?date_created=2022-03-18&vehicle__unit=DG42F41A`** you can change the `date_created` & `vehicle__unit` params to a different `MileageAndDate` Instance
 
 ![details page](./images/vehicle_mileage.png)
