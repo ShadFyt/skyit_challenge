@@ -20,3 +20,9 @@
 
 8. run dev server
    `python3 manage.py runserver`
+
+9. open web browser to `http://localhost:8000/vehicle/`
+
+**This route shows the Vehicle Table**
+
+![vehicle list](./images/vehicle.png.png)
