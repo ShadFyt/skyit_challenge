@@ -1,6 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
-from rest_framework import viewsets
 from rest_framework.response import Response
 from mileage_tracker.models import Vehicle, MileageAndDate
 from mileage_tracker.serializers import VehicleSerializer, MileageAndDateSerializer
@@ -33,7 +32,7 @@ class VehicleDetails(generics.RetrieveUpdateDestroyAPIView):
         # gets `MileageAndDate`` entry by `date_created``
         entry: MileageAndDate = MileageAndDate.objects.filter(
             vehicle__unit=vehicle.unit
-        ).filter(date_created=date(2022, 3, 18))
+        ).filter(date_created=date.today())
         # checks if `MileageAndDate` entry exits
         if entry:
             # If entry for that date already exits then update the `mil` for that entry
@@ -44,7 +43,7 @@ class VehicleDetails(generics.RetrieveUpdateDestroyAPIView):
         else:
             # if `MileageAndDate` entry does not exits then create a new instance of `MileageAndDate`
             mileage_date = MileageAndDate(
-                mil=vehicle.mileage, vehicle=vehicle, date_created=(date(2022, 3, 18))
+                mil=vehicle.mileage, vehicle=vehicle, date_created=(date.today())
             )
             mileage_date.save()
             print("mileage_date", mileage_date)

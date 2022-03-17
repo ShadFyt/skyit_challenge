@@ -10,4 +10,3 @@ urlpatterns = [
     ),
     path("mileage/", views.MileageAndDateList.as_view()),
 ]
-# mileage/diff?date_created=2022-03-18&vehicle__unit=DG42F41A
