@@ -26,3 +26,16 @@
 **This route shows the Vehicle Table**
 
 ![vehicle list](./images/vehicle.png.png)
+
+**To access Vehicle detail page go to http://localhost:8000/vehicle/< unit # >** example: `http://localhost:8000/vehicle/DG42F41A`
+You can also update the mileage on this route and in doing so will create a instance of `MileageAndDate`
+![vehicle detail](./images/vehicle_detail.png)
+
+[MileageAndDate](http://localhost:8000/mileage/)
+**This route shows the `MileageAndDate` Table**
+
+![MileageAndDate](./images/mileage_date_list.png)
+
+**To access `MileageAndDate` detail page go to [MileageAndDate details](http://localhost:8000/mileage/diff?date_created=2022-03-18&vehicle__unit=DG42F41A)** you can change the `date_created` & `vehicle__unit` params to a different `MileageAndDate` Instance
+
+![details page](./images/vehicle_mileage.png)
