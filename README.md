@@ -1,27 +1,27 @@
 # Installation
 
-1. Open git bash
-2. Change the current working directory to the location where you want the cloned directory
-3. type the following in the bash terminal
+1. First, you'd start by opening git bash
+2. Then, change the current working directory to the location where you want the cloned directory
+3. Type the following in the bash terminal:
    `git clone https://github.com/ShadFyt/skyit_challenge.git`
 
-4. setup virtual environment in root dir with the following
+4. Setup virtual environment in the root directory with the following:
    `python3 -m venv env`
 
 5. Active virtual environment
    `source env/bin/activate`
    on windows `source env/Scripts/activate`
 
-6. Download dependencies with the following
+6. Download dependencies with the following:
    `pip install -r requirements.txt`
 
-7. cd into project dir
+7. Cd into project directory
    `cd mysite`
 
-8. run dev server
+8. Run dev server
    `python3 manage.py runserver`
 
-9. open web browser to `http://localhost:8000/vehicle/`
+9. Finally, open the web browser to `http://localhost:8000/vehicle/`
 
 **This route shows the Vehicle Table**
 
