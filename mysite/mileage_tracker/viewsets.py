@@ -11,11 +11,24 @@ from mileage_tracker.serializers import MilesSerializer, VehicleSerializer
 
 
 class VehicleViewSet(ModelViewSet):
+    """
+    This viewset automactically provides all `CRUD` actions.
+
+    """
+
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
     lookup_field = "unit"
 
     def perform_create(self, serializer):
+        """Added some additionally functionality to the `create` method.  When a new `Vehicle` is created we also create a new `Miles`
+
+        Args:
+            serializer: data from end user
+
+        Returns:
+            Vehicle: if the data is valid we return the serialized data
+        """
         super().perform_create(serializer)
         vehicles = self.get_queryset()
         vehicle = vehicles.get(unit=serializer.data["unit"])
@@ -25,37 +38,55 @@ class VehicleViewSet(ModelViewSet):
             vehicle=vehicle,
             date_created=(date.today()),
         )
-        if not new_mile.slug:
-            new_mile.slug = slugify(f"{date.today()} {vehicle.unit}")
+
         new_mile.save()
         return Response(serializer.data)
 
     def perform_update(self, serializer):
+        """ "Added some additionally functionality to the `update` method.
+
+        when the `Vehicle.mileage` get updated, we also want to create a new `Miles` entry if one doesn't exits for that day.
+
+        Args:
+            serializer: data to be updated that was supplied by user
+
+        Returns:
+            Vehicle: returns `Vehicle` object that was being updated
+        """
         vehicle = self.get_object()
         print(vehicle)
-        entry: Miles = Miles.objects.filter(vehicle__unit=vehicle.unit).filter(
+        if entry := Miles.objects.filter(vehicle__unit=vehicle.unit).filter(
             date_created=date.today()
-        )
-        if entry:
+        ):
             entry[0].mileage = vehicle.mileage
-            entry[0].save
+            entry[0].save()
         else:
             # if `Miles` entry does not exits then create a new instance of `Miles`
-            miles = Miles(
+            mile = Miles(
                 mileage=vehicle.mileage, vehicle=vehicle, date_created=(date.today())
             )
-            miles.difference = vehicle.mileage - miles.mileage
-            miles.save()
-            print("Miles", miles)
+            mile.difference = mile.get_difference
+            mile.save()
+            print("Miles", mile)
         return super().perform_update(serializer)
 
 
 class MilesViewSet(ModelViewSet):
+    """
+    This viewset automactically provides all `CRUD` actions.
+
+    """
+
     queryset = Miles.objects.all()
     serializer_class = MilesSerializer
     lookup_field = "slug"
 
     def retrieve(self, request, *args, **kwargs):
+        """Added some additionally functionality to the `update` method.
+
+        Checks if `Miles.difference` is up to date if not then update it
+
+        """
         print("retrieving item")
         mile = self.get_object()
         print(mile.get_difference)
@@ -71,6 +102,6 @@ class MilesViewSet(ModelViewSet):
         serializer = MilesSerializer(queryset, many=True, context={"request": request})
         if queryset:
             for mile in queryset:
-                mile.difference = mile.vehicle.mileage - mile.mileage
+                mile.difference = mile.get_difference
                 mile.save()
         return Response(serializer.data)

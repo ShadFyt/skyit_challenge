@@ -1,7 +1,6 @@
 from rest_framework.serializers import (
     HyperlinkedModelSerializer,
     HyperlinkedRelatedField,
-    HyperlinkedIdentityField,
 )
 from mileage_tracker.models import Vehicle, Miles
 
@@ -10,10 +9,6 @@ class VehicleSerializer(HyperlinkedModelSerializer):
     miles = HyperlinkedRelatedField(
         view_name="miles-detail", lookup_field="slug", read_only=True, many=True
     )
-    # url = HyperlinkedIdentityField(
-    #     view_name="vehicle-detail",
-    #     lookup_field="unit",
-    # )
 
     class Meta:
         model = Vehicle
@@ -42,7 +37,6 @@ class MilesSerializer(HyperlinkedModelSerializer):
 
         fields = [
             "url",
-            # "id",
             "mileage",
             "date_created",
             "difference",

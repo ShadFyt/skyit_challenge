@@ -36,7 +36,7 @@ class Miles(models.Model):
 
     ATTR:
         {
-            mil: int = 12340,
+            mileage: int = 12340,
             date_created: date = "2022-03-16",
             vehicle: Vehicle
         }
@@ -56,10 +56,10 @@ class Miles(models.Model):
     def __str__(self):
         return f"Date: {self.date_created}, Mileage: {self.mileage}, Unit #: {self.vehicle}, Difference: {self.difference}"
 
-    # def save(self, *args, **kwargs):
-    #     if not self.slug:
-    #         self.slug = slugify(f"{self.date_created} {self.vehicle.unit}")
-    #     return super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f"{self.date_created} {self.vehicle.unit}")
+        return super().save(*args, **kwargs)
 
     @property
     def get_difference(self):
