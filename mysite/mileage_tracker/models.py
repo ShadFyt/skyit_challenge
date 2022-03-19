@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+from django.utils.text import slugify
 
 
 class Vehicle(models.Model):
@@ -30,8 +31,8 @@ class Vehicle(models.Model):
         return f"Unit #: {self.unit}, Mileage: {self.mileage}, Manufacturer: {self.manufacturer}, Status: {self.status}"
 
 
-class MileageAndDate(models.Model):
-    """Blueprint for `MileageAndDate` table
+class Miles(models.Model):
+    """Blueprint for `Miles` table
 
     ATTR:
         {
@@ -43,17 +44,23 @@ class MileageAndDate(models.Model):
 
     """
 
-    mil: int = models.IntegerField(blank=False)
+    mileage: int = models.IntegerField(blank=False)
     date_created: date = models.DateField(default=date.today)
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
-    diff = models.IntegerField(null=True)
+    vehicle = models.ForeignKey(Vehicle, related_name="miles", on_delete=models.CASCADE)
+    difference = models.IntegerField(null=True)
+    slug = models.SlugField(unique=True, null=True, blank=True)
 
     class Meta:
         ordering = ["-date_created"]
 
     def __str__(self):
-        return f"Date: {self.date_created}, Mileage: {self.mil}, Unit #: {self.vehicle.unit}, Difference: {self.diff}"
+        return f"Date: {self.date_created}, Mileage: {self.mileage}, Unit #: {self.vehicle}, Difference: {self.difference}"
+
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         self.slug = slugify(f"{self.date_created} {self.vehicle.unit}")
+    #     return super().save(*args, **kwargs)
 
     @property
     def get_difference(self):
-        return self.mil - self.vehicle__mileage
+        return self.vehicle.mileage - self.mileage

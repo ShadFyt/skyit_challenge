@@ -1,17 +1,55 @@
-from cgitb import lookup
-from rest_framework import serializers
-from mileage_tracker.models import Vehicle, MileageAndDate
+from rest_framework.serializers import (
+    HyperlinkedModelSerializer,
+    HyperlinkedRelatedField,
+    HyperlinkedIdentityField,
+)
+from mileage_tracker.models import Vehicle, Miles
 
 
-class VehicleSerializer(serializers.ModelSerializer):
+class VehicleSerializer(HyperlinkedModelSerializer):
+    miles = HyperlinkedRelatedField(
+        view_name="miles-detail", lookup_field="slug", read_only=True, many=True
+    )
+    # url = HyperlinkedIdentityField(
+    #     view_name="vehicle-detail",
+    #     lookup_field="unit",
+    # )
+
     class Meta:
         model = Vehicle
-        fields = ["unit", "created", "mileage", "manufacturer", "status"]
+        fields = [
+            "url",
+            "unit",
+            "created",
+            "mileage",
+            "manufacturer",
+            "status",
+            "miles",
+        ]
+
+        extra_kwargs = {
+            "url": {"view_name": "vehicle-detail", "lookup_field": "unit"},
+        }
 
 
-class MileageAndDateSerializer(serializers.ModelSerializer):
+class MilesSerializer(HyperlinkedModelSerializer):
+    vehicle = HyperlinkedRelatedField(
+        view_name="vehicle-detail", read_only=True, many=False, lookup_field="unit"
+    )
+
     class Meta:
-        model = MileageAndDate
-        lookup_field = "date_created"
+        model = Miles
 
-        fields = ["id", "mil", "date_created", "vehicle", "diff"]
+        fields = [
+            "url",
+            # "id",
+            "mileage",
+            "date_created",
+            "difference",
+            "slug",
+            "vehicle",
+        ]
+
+        extra_kwargs = {
+            "url": {"view_name": "miles-detail", "lookup_field": "slug"},
+        }

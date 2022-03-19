@@ -1,8 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.response import Response
-from mileage_tracker.models import Vehicle, MileageAndDate
-from mileage_tracker.serializers import VehicleSerializer, MileageAndDateSerializer
+from mileage_tracker.models import Vehicle, Miles
+from mileage_tracker.serializers import VehicleSerializer, MilesSerializer
 
 from datetime import date
 
@@ -26,35 +26,35 @@ class VehicleDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = VehicleSerializer
 
     def perform_update(self, serializer):
-        # entry point into saving updated mileage
+        # entry point into saving updated Miles
         # gets current vehicle the view is displaying
         vehicle: Vehicle = self.get_object()
-        # gets `MileageAndDate`` entry by `date_created``
-        entry: MileageAndDate = MileageAndDate.objects.filter(
-            vehicle__unit=vehicle.unit
-        ).filter(date_created=date.today())
-        # checks if `MileageAndDate` entry exits
+        # gets `Miles`` entry by `date_created``
+        entry: Miles = Miles.objects.filter(vehicle__unit=vehicle.unit).filter(
+            date_created=date.today()
+        )
+        # checks if `Miles` entry exits
         if entry:
             # If entry for that date already exits then update the `mil` for that entry
-            entry[0].mil = vehicle.mileage
+            entry[0].mil = vehicle.Miles
             entry[0].save()
-            print("entry", entry[0].mil, vehicle.mileage)
+            print("entry", entry[0].mil, vehicle.Miles)
 
         else:
-            # if `MileageAndDate` entry does not exits then create a new instance of `MileageAndDate`
-            mileage_date = MileageAndDate(
-                mil=vehicle.mileage, vehicle=vehicle, date_created=(date.today())
+            # if `Miles` entry does not exits then create a new instance of `Miles`
+            Miles_date = Miles(
+                mil=vehicle.Miles, vehicle=vehicle, date_created=(date.today())
             )
-            mileage_date.save()
-            print("mileage_date", mileage_date)
+            Miles_date.save()
+            print("Miles_date", Miles_date)
         super().perform_update(serializer)
 
         print("done updating")
 
 
-class VehicleMileageDetail(generics.ListAPIView):
-    queryset = MileageAndDate.objects.all()
-    serializer_class = MileageAndDateSerializer
+class MilesDetail(generics.RetrieveAPIView):
+    queryset = Miles.objects.all()
+    serializer_class = MilesSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ("date_created", "vehicle__unit")
 
@@ -65,21 +65,21 @@ class VehicleMileageDetail(generics.ListAPIView):
         return queryset
 
 
-class MileageAndDateList(generics.ListAPIView):
+class MilesList(generics.ListAPIView):
     """
-    Get a list of `MileageAndDate`
+    Get a list of `Miles`
     """
 
-    queryset = MileageAndDate.objects.all()
-    serializer_class = MileageAndDateSerializer
+    queryset = Miles.objects.all()
+    serializer_class = MilesSerializer
 
     def list(self, request, *args, **kwargs):
         super().list(request, *args, **kwargs)
         queryset = self.get_queryset()
-        serializer = MileageAndDateSerializer(queryset, many=True)
-        # update `MileageAndDate.diff`
+        serializer = MilesSerializer(queryset, many=True)
+        # update `Miles.difference`
         if queryset:
             for m in queryset:
-                m.diff = m.vehicle.mileage - m.mil
+                m.difference = m.vehicle.Miles - m.mil
                 m.save()
         return Response(serializer.data)
